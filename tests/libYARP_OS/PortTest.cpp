@@ -1463,6 +1463,7 @@ public:
             server.start();
 
             TcpTestClient* client = new TcpTestClient();
+            yarp::os::Time::delay(0.5);
 
             delete client;
 

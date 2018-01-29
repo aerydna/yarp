@@ -7,9 +7,9 @@
  */
 
 #include <yarp/manager/yarpbroker.h>
-
 #include <csignal>
 #include <cstring>
+#include <yarp/os/LogStream.h>
 
 #define YARPRUN_OK                  0
 #define YARPRUN_NORESPONSE          1
@@ -23,6 +23,7 @@
 #define STOP_TIMEOUT            15.0
 #define KILL_TIMEOUT            10.0
 #define EVENT_THREAD_PERIOD     0.5 //seconds
+#define LOGGERPORT              2
 
 #if defined(_WIN32)
     #define SIGKILL 9
@@ -58,6 +59,7 @@ void YarpBroker::fini()
 {
     if(PeriodicThread::isRunning())
         PeriodicThread::stop();
+    log.close();
     //port.close();
 }
 
@@ -195,6 +197,16 @@ bool YarpBroker::start()
         if(ret == YARPRUN_SEMAPHORE_PARAM)
             strError += string(" due to " + __trace_message);
         return false;
+    }
+    
+    log.open("...");
+    if(log.connect(command.find("log_port_name").asString()))
+    {
+        yInfo() << "yarpbroker: succesfully connected to log port";
+    }
+    else
+    {
+        yError() << "yarpbroker: failed to connect to log port";
     }
 
     double base = SystemClock::nowSystem();
@@ -941,6 +953,7 @@ int YarpBroker::requestServer(Property& config)
         Bottle response;
         int ret = SendMsg(msg, config.find("on").asString(),
                           response, CONNECTION_TIMEOUT);
+        config.put("log_port_name", response.get(LOGGERPORT).asString());
         if (ret != YARPRUN_OK)
             return ret;
 

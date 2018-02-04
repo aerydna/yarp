@@ -33,7 +33,9 @@ if(YARP_COMPILE_yarpmanager)
                                src-manager/resourceviewwidget.cpp
                                src-manager/safe_manager.cpp
                                src-manager/stdoutwindow.cpp
-                               src-manager/yscopewindow.cpp)
+                               src-manager/yscopewindow.cpp
+                               src-manager/loggerwidget.cpp
+                               src-manager/loggerwindow.cpp)
 
   set(yarpmanager_manager_HDRS src-manager/aboutdlg.h
                                src-manager/applicationviewwidget.h
@@ -50,7 +52,9 @@ if(YARP_COMPILE_yarpmanager)
                                src-manager/safe_manager.h
                                src-manager/stdoutwindow.h
                                src-manager/template_res.h
-                               src-manager/yscopewindow.h)
+                               src-manager/yscopewindow.h
+                               src-manager/loggerwidget.h
+                               src-manager/loggerwindow.h)
 
   set(yarpmanager_manager_UI_FILES src-manager/aboutdlg.ui
                                    src-manager/applicationviewwidget.ui
@@ -60,7 +64,8 @@ if(YARP_COMPILE_yarpmanager)
                                    src-manager/moduleviewwidget.ui
                                    src-manager/resourceviewwidget.ui
                                    src-manager/stdoutwindow.ui
-                                   src-manager/yscopewindow.ui)
+                                   src-manager/yscopewindow.ui
+                                   src-manager/loggerwindow.ui)
 
 
   # Builder files

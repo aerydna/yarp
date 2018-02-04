@@ -145,8 +145,10 @@ public:
 
     void setCmd(const std::string& cmd) { mCmd = cmd; }
     void setEnv(const std::string& env) { mEnv = env; }
+	void setLogPort(const std::string& newlp) { logPort = newlp; }
 
 protected:
+	std::string logPort;
     std::string mAlias;
     std::string mOn;
 
@@ -172,6 +174,7 @@ public:
     bool Add(YarpRunProcInfo *process);
     int Signal(std::string& alias, int signum);
     int Killall(int signum);
+    std::string logPort(const std::string& alias);
 
 #if defined(_WIN32)
     HANDLE hZombieHunter;

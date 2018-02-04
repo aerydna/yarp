@@ -78,6 +78,19 @@ if(YARP_COMPILE_libYARP_manager)
                FILES ${YARP_manager_HDRS}
                      ${YARP_manager_IMPL_HDRS})
 
+  set_property(GLOBAL APPEND PROPERTY YARP_TREE_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
+  get_property(YARP_TREE_INCLUDE_DIRS GLOBAL PROPERTY YARP_TREE_INCLUDE_DIRS)
+  get_property(YARP_logger_HDRS TARGET YARP_logger PROPERTY INCLUDE_DIRS)
+  include_directories(${YARP_logger_HDRS})
+  set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
+  
+  include_directories(${YARP_TREE_INCLUDE_DIRS})
+  include_directories(SYSTEM ${TinyXML_INCLUDE_DIRS})
+
+
+  if(CREATE_LIB_MATH)
+    add_definitions( -DWITH_YARPMATH )
+  endif()
 
   # FIXME All API should use a YARP_manager_API for __declspec(dllimport/dllexport)
   # For now always build the library as STATIC
@@ -93,10 +106,11 @@ if(YARP_COMPILE_libYARP_manager)
   endif()
 
   target_link_libraries(YARP_manager PUBLIC YARP::YARP_OS
-                                     PRIVATE YARP::YARP_sig)
-  list(APPEND YARP_manager_PUBLIC_DEPS YARP_OS)
+                                     PRIVATE YARP::YARP_sig
+									 PUBLIC YARP::YARP_logger
+                                             ${TinyXML_LIBRARIES})
+list(APPEND YARP_manager_PUBLIC_DEPS YARP_OS)
   list(APPEND YARP_manager_PRIVATE_DEPS YARP_sig)
-
   if(TARGET YARP::YARP_math)
     target_link_libraries(YARP_manager PRIVATE YARP::YARP_math)
     target_compile_definitions(YARP_manager PRIVATE WITH_YARPMATH)

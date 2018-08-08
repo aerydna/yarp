@@ -19,6 +19,7 @@
 #include <iostream>
 #include <cstdio>
 #include <fcntl.h>
+#include <mutex>
 
 #include <sys/socket.h>
 
@@ -50,20 +51,22 @@ int TcpConnector::connect(TcpStream &new_stream, const Contact& address, YARP_ti
 
     // Write sockaddr struct with given address...
     sockaddr_in servAddr;
-    servAddr.sin_addr.s_addr = INADDR_ANY;
-    servAddr.sin_family = AF_INET;
-    servAddr.sin_port = htons(address.getPort());
-    memset(servAddr.sin_zero, '\0', sizeof servAddr.sin_zero);
 
-    struct hostent *hostInfo = yarp::os::impl::gethostbyname(address.getHost().c_str());
-    if (hostInfo) {
-        bcopy(hostInfo->h_addr, (char *)(&servAddr.sin_addr), hostInfo->h_length);
+    struct addrinfo hints = {};
+    hints.ai_family = AF_UNSPEC;
+    struct addrinfo* pResultList;
+
+    int result = yarp::os::impl::getaddrinfo(address.getHost().c_str(), nullptr, &hints, &pResultList);
+    if (result == 0) {
+        memcpy(&servAddr, pResultList->ai_addr, sizeof(servAddr));
+        servAddr.sin_port = htons(address.getPort());
     } else {
+        std::cerr << "TcpConnector::connect fail: Error getaddrinfo() " << yarp::os::impl::gai_strerror(result) << std::endl;
         inet_pton(AF_INET, address.getHost().c_str(), &servAddr.sin_addr);
     }
+    yarp::os::impl::freeaddrinfo(pResultList);
 
     auto handle = new_stream.get_handle();
-
     yAssert(handle != -1);
 
     int res;

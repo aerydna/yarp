@@ -25,19 +25,10 @@ namespace yarp {
 namespace os {
 namespace impl {
 
-#ifdef YARP_HAS_ACE
-    using ACE_OS::gethostbyaddr;
-    using ACE_OS::gethostbyname;
-    // ACE_OS::getaddrinfo, etc are not implemented, anyway ACE implementation
-    // is different, therefore they are not needed.
-#else
-    using ::gethostbyaddr;
-    using ::gethostbyname;
-    using ::getaddrinfo;
-    using ::freeaddrinfo;
-    using ::gai_strerror;
-    using ::getnameinfo;
-#endif
+using ::getaddrinfo;
+using ::freeaddrinfo;
+using ::gai_strerror;
+using ::getnameinfo;
 
 } // namespace impl
 } // namespace os

@@ -41,9 +41,7 @@ public:
         buffered_port = nullptr;
         T example;
         port.promiseType(example.getType());
-        port.setInputMode(true);
-        port.setOutputMode(false);
-        port.setRpcMode(false);
+        port.setReadOnly();
         if (name != "") {
             yAssert(topic(name));
         }
@@ -75,6 +73,17 @@ public:
         return open(name);
     }
 
+    bool topic(const std::string& name, const std::string& nodename) {
+        if (!name.size() ||
+            !nodename.size() ||
+            name[0] != '/' ||
+            nodename[0] != '/')
+        {
+            yError() << "node name or topic name empty or not starting with '/'";
+            return false;
+        }
+        return open(name+"@"+nodename);
+    }
     // documentation provided in Contactable
     bool open(const std::string& name) override
     {

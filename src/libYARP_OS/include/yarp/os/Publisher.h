@@ -9,9 +9,11 @@
 #ifndef YARP_OS_PUBLISHER_H
 #define YARP_OS_PUBLISHER_H
 
+#include <yarp/os/Log.h>
+#include <yarp/os/Logstream.h>
 #include <yarp/os/AbstractContactable.h>
 #include <yarp/os/BufferedPort.h>
-#include <yarp/os/Log.h>
+#include <yarp/os/Node.h>
 
 namespace yarp {
 namespace os {
@@ -41,9 +43,7 @@ public:
         buffered_port = nullptr;
         T example;
         port.promiseType(example.getType());
-        port.setInputMode(false);
-        port.setOutputMode(true);
-        port.setRpcMode(false);
+        port.setWriteOnly();
         if (name != "") {
             yAssert(topic(name));
         }
@@ -60,18 +60,38 @@ public:
     }
 
     /**
-     *
      * Set topic to publish to
      *
      * @param name topic name
-     *
      * @return true on success
-     *
      */
     bool topic(const std::string& name)
     {
         port.includeNodeInName(true);
         return open(name);
+    }
+
+    /**
+    *
+    * Set topic to publish to using the given node
+    *
+    * @param name topic name
+    * @param node ...
+    * @return true on success
+    *
+    */
+    bool topic(const std::string& name, const std::string& node)
+    {
+        if (!name.size() ||
+            !node.size() ||
+            name[0] != '/' ||
+            node[0] != '/')
+        {
+            yError() << "node name or topic name empty or not starting with '/'";
+            return false;
+        }
+        //port.includeNodeInName(true);
+        return open(name + "@" + node);
     }
 
     // documentation provided in Contactable

@@ -84,18 +84,31 @@ public:
         }
         return open(name+"@"+nodename);
     }
+
     // documentation provided in Contactable
     bool open(const std::string& name) override
     {
         clear();
-        return port.open(name);
+        if(port.open(name))
+        if (callbackIsSet)
+        {
+            if(extCallback) useCallback(*extCallback);
+            else useCallback();
+        }
+        else return false;
     }
 
     // documentation provided in Contactable
     bool open(const Contact& contact, bool registerName = true) override
     {
         clear();
-        return port.open(contact, registerName);
+        if(port.open(contact, registerName))
+        if (callbackIsSet)
+        {
+            if (extCallback) useCallback(*extCallback);
+            else useCallback();
+        }
+        else return false;
     }
 
     // documentation provided in Contactable
@@ -153,18 +166,23 @@ public:
         // override this to do something
     }
 
-    void useCallback(TypedReaderCallback<T>& callback)
+    void useCallback (TypedReaderCallback< T > &callback)
     {
+        callbackIsSet = true;
+        extCallback = &callback;
         buffer().useCallback(callback);
     }
 
     void useCallback()
     {
+        callbackIsSet = true;
         buffer().useCallback(*this);
     }
 
     void disableCallback()
     {
+        callbackIsSet = false;
+        extCallback = nullptr;
         buffer().disableCallback();
     }
 
@@ -178,7 +196,9 @@ public:
 private:
     bool isStrict;
     Port port;
+    bool callbackIsSet{ false };
     BufferedPort<T>* buffered_port;
+    TypedReaderCallback< T >* extCallback{ nullptr };
 
     Contactable& active()
     {

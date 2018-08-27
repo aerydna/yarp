@@ -78,6 +78,10 @@ public:
      */
     Contact where();
 
+    bool isEmpty();
+
+    std::string getName();
+
 private:
     class Helper;
     Helper* const mPriv;

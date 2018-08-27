@@ -160,6 +160,10 @@ void yarp::os::Nodes::Private::remove(Contactable& contactable)
     Node* node = getNode(contactable.getName(), false);
     if (node) {
         node->remove(contactable);
+        if (node->isEmpty())
+        {
+            removeExternalNode(node->getName());
+        }
     }
 }
 
@@ -267,6 +271,11 @@ Nodes::Nodes() :
 Nodes::~Nodes()
 {
     delete mPriv;
+}
+
+Node* Nodes::getNode(const std::string name)
+{
+    return mPriv->getNode(name, false);
 }
 
 void Nodes::add(Contactable& contactable)

@@ -141,6 +141,8 @@ public:
      */
     bool requireActiveName();
 
+    Node* getNode(const std::string name);
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 private:
     class Private;

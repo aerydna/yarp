@@ -194,6 +194,16 @@ public:
         port.close();
     }
 
+    bool isEmpty()
+    {
+        return name_cache.empty();
+    }
+
+    std::string getName()
+    {
+        return port.getName();
+    }
+
     void clear()
     {
         if (!mutex.try_lock()) {
@@ -566,6 +576,11 @@ Node::~Node()
     delete mPriv;
 }
 
+std::string Node::getName()
+{
+    return mPriv->getName();
+}
+
 void Node::add(Contactable& contactable)
 {
     mPriv->add(contactable);
@@ -593,6 +608,11 @@ Contact Node::query(const std::string& name, const std::string& category)
 void Node::interrupt()
 {
     mPriv->interrupt();
+}
+
+bool Node::isEmpty()
+{
+    return mPriv->isEmpty();
 }
 
 Contact Node::where()

@@ -258,6 +258,7 @@ void yarp::os::Nodes::Private::addExternalNode(const std::string& name, Node& no
 void yarp::os::Nodes::Private::removeExternalNode(const std::string& name)
 {
     mutex.lock();
+    if (nodes_map.at(name).first && !nodes_map.at(name).second) delete nodes_map.at(name).first;
     nodes_map.erase(name);
     mutex.unlock();
 }

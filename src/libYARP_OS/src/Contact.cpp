@@ -332,7 +332,7 @@ std::string Contact::toURI(bool includeCarrier) const
         result += mPriv->hostname;
         result += ":";
         result += NetType::toString(mPriv->port);
-        result += "/";
+        //result += "/";
     }
     return result;
 }

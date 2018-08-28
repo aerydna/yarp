@@ -373,7 +373,7 @@ void Port::close()
     }
 
     Nodes& nodes = NameClient::getNameClient().getNodes();
-    nodes.remove(*this);
+    
 
     PortCoreAdapter& core = IMPL();
     core.finishReading();
@@ -381,15 +381,15 @@ void Port::close()
     core.close();
     core.join();
     core.active = false;
-
+    nodes.remove(*this);
     // In fact, open flag means "ever opened", so don't reset it
     // core.setOpened(false);
 }
 
 void Port::interrupt()
 {
-    Nodes& nodes = NameClient::getNameClient().getNodes();
-    nodes.remove(*this);
+    //Nodes& nodes = NameClient::getNameClient().getNodes();
+    //nodes.remove(*this);
 
     PortCoreAdapter& core = IMPL();
     core.interrupt();

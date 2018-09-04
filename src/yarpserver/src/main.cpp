@@ -8,7 +8,19 @@
 
 #include <yarp/serversql/yarpserversql.h>
 
+#include <yarp/server/yarpserver.h>
+#include <string>
+
 int main(int argc, char *argv[]) {
-    int ret=yarpserver_main(argc, argv);
-    return (ret!=0?1:0);
+    
+    if (argc > 1 && std::string(argv[1]) == "--new")
+    {
+        yarp::server::NameServer y;
+        y.start();
+    }
+    else
+    {
+        int ret = yarpserver_main(argc, argv);
+        return (ret != 0 ? 1 : 0);
+    }
 }

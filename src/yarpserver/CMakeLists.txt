@@ -8,7 +8,7 @@
 set(yarpserver_SRCS src/main.cpp)
 
 add_executable(yarpserver ${yarpserver_SRCS})
-target_link_libraries(yarpserver YARP_serversql YARP_name)
+target_link_libraries(yarpserver YARP_serversql YARP_name YARP_server)
 
 install(TARGETS yarpserver
         COMPONENT utilities
